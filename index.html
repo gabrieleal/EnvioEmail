@@ -13,6 +13,33 @@
             text-align: center;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+            $("#resp").empty().hide();
+            $("#btn").on("click",function(){
+                $("#resp").empty().hide();
+                $("#resp").attr("class", "alert alert-success");
+                var obj={};
+                obj["email"]=$("#email").val();
+                obj["asunto"]=$("#asunto").val();
+                obj["message"]=$("#msj").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "controller/send.php",
+                    data: JSON.stringify(obj),
+                    dataType: "application/json ",
+                    success: function (response) {
+                        $("#resp").append("<span>Se ha agregado correctamente </span>").show();
+                    },
+                    error: function(err){
+                        $("#resp").attr("class", "alert alert-danger");
+                        $("#resp").append("se produjo un error: " + err.responseText).show();
+                    } 
+                });
+            })
+        });
+    </script>
 </head>
 <body>
     <div class="container-fluid  bg-dark">
@@ -20,19 +47,21 @@
             <h1 style="color:white"><b>Envio de Email</b></h1>
         </header>
     </div>
-    <div class="container" style=" height:100vh; background-color: rgb(173, 173, 173);">
+    <div class="container p-3" style=" height:auto; background-color: rgb(173, 173, 173);">
         <p class="h3" style="margin: 1px auto; width: 50vw;">Contactenos</p>
         <hr>
-        <form action=""style="margin: 1px auto;width: 50vw;">
+        <form style="margin: 1px auto;width: 50vw;">
             <label for="name">Nombre Completo <br><input type="text" name="name" id="name"></label>
              <br>
             <label for="email"> Ingrese Email <br><input type="email" name="email" id="email"></label>
             <br>
+            <label for="asunto"> Ingrese Asunto <br><input type="text" name="asunto" id="asunto"></label>
+            <br>
             <label for="msj">Ingrese Mensaje <br><input type="text" name="msj" id="msj"></label>
             <br><br>
-            <input type="button" value="enviar" class="btn btn-success">
-        </form>
-
+            <input type="button" value="enviar" id="btn" class="btn btn-success">
+        </form><br>
+        <div id="resp" class="alert alert-success" role="alert"></div>
     </div>
 </body>
 </html>
